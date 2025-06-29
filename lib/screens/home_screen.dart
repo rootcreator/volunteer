@@ -118,3 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CalendarScreen()),
+    );
+  },
+  child: const Text("View Calendar"),
+),

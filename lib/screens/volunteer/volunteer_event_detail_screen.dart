@@ -15,6 +15,9 @@ class _VolunteerEventDetailScreenState extends State<VolunteerEventDetailScreen>
   Map<String, dynamic>? eventData;
   bool isJoined = false;
   bool loading = true;
+  bool isCheckedIn = false;
+  bool isCheckedOut = false;
+
 
   @override
   void initState() {
@@ -26,6 +29,12 @@ class _VolunteerEventDetailScreenState extends State<VolunteerEventDetailScreen>
     final doc = await FirebaseFirestore.instance.collection('events').doc(widget.eventId).get();
     final data = doc.data();
     final uid = FirebaseAuth.instance.currentUser?.uid;
+    final checkIns = (data['checkIns'] ?? []) as List;
+final checkOuts = (data['checkOuts'] ?? []) as List;
+
+isCheckedIn = checkIns.any((entry) => entry['uid'] == uid);
+isCheckedOut = checkOuts.any((entry) => entry['uid'] == uid);
+
 
     if (data != null && uid != null) {
       setState(() {
@@ -87,4 +96,57 @@ class _VolunteerEventDetailScreenState extends State<VolunteerEventDetailScreen>
       ),
     );
   }
+}
+
+// Show only if joined
+if (isJoined) ...[
+  const SizedBox(height: 20),
+
+  if (!isCheckedIn && _isToday(date))
+    ElevatedButton.icon(
+      icon: const Icon(Icons.login),
+      label: const Text("Check In"),
+      onPressed: _handleCheckIn,
+    ),
+
+  if (isCheckedIn && !isCheckedOut)
+    ElevatedButton.icon(
+      icon: const Icon(Icons.logout),
+      label: const Text("Check Out"),
+      onPressed: _handleCheckOut,
+    ),
+
+  if (isCheckedOut)
+    const Text("✅ You have checked out.", style: TextStyle(color: Colors.green)),
+]
+
+
+
+bool _isToday(DateTime date) {
+  final now = DateTime.now();
+  return now.year == date.year && now.month == date.month && now.day == date.day;
+}
+
+Future<void> _handleCheckIn() async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
+
+  await FirebaseFirestore.instance.collection('events').doc(widget.eventId).update({
+    'checkIns': FieldValue.arrayUnion([{'uid': uid, 'time': Timestamp.now()}])
+  });
+
+  setState(() => isCheckedIn = true);
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("You are checked in.")));
+}
+
+Future<void> _handleCheckOut() async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
+
+  await FirebaseFirestore.instance.collection('events').doc(widget.eventId).update({
+    'checkOuts': FieldValue.arrayUnion([{'uid': uid, 'time': Timestamp.now()}])
+  });
+
+  setState(() => isCheckedOut = true);
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("You are checked out.")));
 }
