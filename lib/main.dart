@@ -16,20 +16,20 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await NotificationService.init();
+  //await NotificationService.init();
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.requestPermission();
+  //FirebaseMessaging messaging = FirebaseMessaging.instance;
+  //await messaging.requestPermission();
 
-  String? token = await messaging.getToken();
-  print("FCM Token: $token");
+  //String? token = await messaging.getToken();
+  //print("FCM Token: $token");
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    NotificationService.showLocalNotification(message);
-  });
+  //FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //  NotificationService.showLocalNotification(message);
+  //});
 
   // Optional: handle background/terminated notifications
-  setupFCMHandlers();
+  //setupFCMHandlers();
 
   runApp(const VolunteerApp());
 }
