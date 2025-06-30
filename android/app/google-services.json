@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "389730931635",
+    "project_id": "volunteercoord-ebd2d",
+    "storage_bucket": "volunteercoord-ebd2d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389730931635:android:c7b98614369f24923531c6",
+        "android_client_info": {
+          "package_name": "com.example.volunteer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl6fqmgpvpotmJnIOVZsBFbVPrWy4qyx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

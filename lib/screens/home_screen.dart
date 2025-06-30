@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../services/auth_service.dart';
-import 'create_event_screen.dart';
-import 'volunteer_events_screen.dart';
-import 'admin_events_screen.dart'; // ← Don't forget to import this
+import 'admin/admin_events_screen.dart';
+import 'admin/create_event_screen.dart';
+import 'calendar_screen.dart';
+import 'volunteer/volunteer_events_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,57 +76,62 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Welcome, $name!', style: const TextStyle(fontSize: 24)),
-            Text('Role: $role'),
-            const SizedBox(height: 30),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Welcome, $name!', style: const TextStyle(fontSize: 24)),
+              const SizedBox(height: 10),
+              Text('Role: $role'),
+              const SizedBox(height: 30),
 
-            if (role == 'admin') ...[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CreateEventScreen()),
-                  );
-                },
-                child: const Text('Create Event'),
-              ),
+              if (role == 'admin') ...[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CreateEventScreen()),
+                    );
+                  },
+                  child: const Text('Create Event'),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminEventListScreen()),
+                    );
+                  },
+                  child: const Text('Manage Events'),
+                ),
+              ] else ...[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const VolunteerEventsScreen()),
+                    );
+                  },
+                  child: const Text('View Events'),
+                ),
+              ],
+
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminEventsScreen()),
+                    MaterialPageRoute(builder: (_) => const CalendarScreen()),
                   );
                 },
-                child: const Text('Manage Events'),
-              ),
-            ] else ...[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const VolunteerEventsScreen()),
-                  );
-                },
-                child: const Text('View Events'),
+                child: const Text("View Calendar"),
               ),
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 }
-
-ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const CalendarScreen()),
-    );
-  },
-  child: const Text("View Calendar"),
-),
